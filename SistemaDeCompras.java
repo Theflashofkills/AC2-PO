@@ -84,7 +84,38 @@ public class SistemaDeCompras {
     }
 
     public void cadastrarProduto() {
-        // Implemente a lógica para cadastrar um produto.
+            Scanner scanner = new Scanner(System.in);
+        
+            System.out.println("\nCadastro de Produto:");
+            System.out.print("Código do Produto: ");
+            int codigo = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            System.out.print("Nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Descrição: ");
+            String descricao = scanner.nextLine();
+            System.out.print("Preço: R$");
+            double preco = scanner.nextDouble();
+        
+            Produto produto = new Produto(codigo, nome, descricao, preco);
+        
+            // Opcionalmente, você pode definir a data de validade aqui.
+            // Por exemplo:
+            // System.out.print("Data de Validade (YYYY-MM-DD): ");
+            // String dataValidadeStr = scanner.next();
+            // LocalDate dataValidade = LocalDate.parse(dataValidadeStr);
+            // produto.setDataValidade(dataValidade);
+        
+            produtos.add(produto);
+            System.out.println("Produto cadastrado com sucesso!");
+        
+            System.out.print("Deseja ver como ficou o produto cadastrado? (S/N): ");
+            String verProduto = scanner.next();
+            
+            if (verProduto.equalsIgnoreCase("S")) {
+                System.out.println("Produto Cadastrado:");
+                System.out.println(produto);
+            }
     }
 
     public void efetuarCompra() {
