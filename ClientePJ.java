@@ -12,6 +12,10 @@ class ClientePJ extends Cliente {
         this.prazoMaximo = prazoMaximo;
     }
 
+    public String getCnpj() {
+        return cnpj;
+    }
+
     @Override
     public String toString() {
         return super.toString() + "\nCNPJ: " + cnpj + "\nRazão Social: " + razaoSocial + "\nPrazo Máximo: " + prazoMaximo + " dias";
