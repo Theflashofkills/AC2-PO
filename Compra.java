@@ -1,9 +1,6 @@
 package AC2;
 
-import java.util.ArrayList;
-import java.util.List;
-
-class Compra {
+public class Compra {
     private int identificador;
     private java.time.LocalDate data;
     private double valorTotal;
@@ -17,11 +14,12 @@ class Compra {
         this.cpfOuCnpjCliente = cpfOuCnpjCliente;
         this.totalPago = 0;
         this.itens = new ArrayList<>();
+        this.valorTotal = 0; // Inicialize o valor total como zero
     }
 
     public void adicionarItem(ItemCompra item) {
         itens.add(item);
-        valorTotal += item.valorTotal;
+        valorTotal += item.getValorTotal(); // Use o getter para obter o valor total do item
     }
 
     public double calcularValorRestante() {
@@ -33,4 +31,5 @@ class Compra {
         return "Identificador da Compra: " + identificador + "\nData: " + data + "\nValor Total: R$" + valorTotal + "\nCPF/CNPJ do Cliente: " + cpfOuCnpjCliente + "\nTotal Pago: R$" + totalPago;
     }
 }
+
 
