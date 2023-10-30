@@ -1,5 +1,8 @@
 package AC2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Compra {
     private int identificador;
     private java.time.LocalDate data;
