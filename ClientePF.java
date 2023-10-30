@@ -10,6 +10,10 @@ class ClientePF extends Cliente {
         this.maxParcelas = maxParcelas;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
     @Override
     public String toString() {
         return super.toString() + "\nCPF: " + cpf + "\nMáximo de Parcelas: " + maxParcelas;
