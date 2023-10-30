@@ -1,6 +1,4 @@
-package AC2;
-
-class ItemCompra {
+public class ItemCompra {
     private int quantidade;
     private String nomeProduto;
     private double precoUnitario;
@@ -13,8 +11,13 @@ class ItemCompra {
         this.valorTotal = quantidade * precoUnitario;
     }
 
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
     @Override
     public String toString() {
         return "Produto: " + nomeProduto + "\nQuantidade: " + quantidade + "\nPreço Unitário: R$" + precoUnitario + "\nValor Total: R$" + valorTotal;
     }
 }
+
