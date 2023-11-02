@@ -1,5 +1,3 @@
-package AC2;
-
 class ClientePJ extends Cliente {
     private String cnpj;
     private String razaoSocial;
