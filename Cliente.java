@@ -1,5 +1,3 @@
-package AC2;
-
 class Cliente {
     private String nome;
     private Endereco endereco;
@@ -9,7 +7,15 @@ class Cliente {
         this.nome = nome;
         this.endereco = endereco;
         this.dataCadastro = java.time.LocalDate.now().toString();
+
+        
     }
+    public String getNome() {
+            return nome;
+        }
+
+
+    
 
     @Override
     public String toString() {
