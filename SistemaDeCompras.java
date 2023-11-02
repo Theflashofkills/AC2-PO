@@ -1,5 +1,3 @@
-package AC2;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -110,7 +108,7 @@ public class SistemaDeCompras {
                 case 2: // Pessoa Jurídica
                     System.out.print("CNPJ: ");
                     String cnpj = scanner.next();
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine();
                     System.out.print("Razão Social: ");
                     String razaoSocial = scanner.nextLine();
                     System.out.print("Prazo Máximo: ");
@@ -164,7 +162,7 @@ public class SistemaDeCompras {
         System.out.println("\nDeletar Cliente por CPF ou CNPJ:");
         System.out.print("Digite o CPF ou CNPJ do cliente que deseja deletar: ");
         String cpfOuCnpj = scanner.next();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
     
         Cliente clienteADeletar = null;
     
@@ -210,9 +208,99 @@ public class SistemaDeCompras {
     }
     
 
+   
+    
+    
     public void deletarClientePorNome() {
-        // Implemente a lógica para deletar um cliente por nome.
+        Scanner scanner = new Scanner(System.in);
+    
+        if (clientes.isEmpty()) {
+            System.out.println("Não há nenhum cliente em nossa base de dados.");
+            return;
+        }
+    
+        System.out.println("\nDeletar Cliente por Nome:");
+        System.out.print("Digite o nome do cliente que deseja deletar: ");
+        String nomeCliente = scanner.nextLine();
+    
+        List<Cliente> clientesEncontrados = new ArrayList<>();
+    
+        // Procurar por clientes com o mesmo nome
+        for (Cliente cliente : clientes) {
+            if (cliente.getNome().equalsIgnoreCase(nomeCliente)) {
+                clientesEncontrados.add(cliente);
+            }
+        }
+    
+        if (clientesEncontrados.isEmpty()) {
+            System.out.println("Cliente não encontrado.");
+    
+            int opcao;
+            do {
+                System.out.println("Opções:");
+                System.out.println("1 - Voltar ao Menu");
+                System.out.println("2 - Inserir nome novamente");
+                System.out.print("Escolha uma opção: ");
+                opcao = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                if (opcao == 1) {
+                    return;
+                } else if (opcao != 2) {
+                    System.out.println("Opção inválida. Tente novamente.");
+                }
+            } while (opcao != 1 && opcao != 2);
+        } else {
+            System.out.println("Clientes encontrados com o nome \"" + nomeCliente + "\":");
+            for (int i = 0; i < clientesEncontrados.size(); i++) {
+                Cliente cliente = clientesEncontrados.get(i);
+                System.out.println(i + 1 + " - " + cliente);
+            }
+    
+            System.out.print("Escolha o número do cliente que deseja deletar (ou 0 para cancelar): ");
+            int escolha = scanner.nextInt();
+            scanner.nextLine();
+    
+            if (escolha > 0 && escolha <= clientesEncontrados.size()) {
+                Cliente clienteADeletar = clientesEncontrados.get(escolha - 1);
+    
+                System.out.println("Informações do Cliente a ser deletado:");
+                System.out.println(clienteADeletar);
+    
+                System.out.println("Deseja mesmo deletar este cliente?");
+                System.out.println("1 - Sim");
+                System.out.println("2 - Não, quero deletar outro cliente");
+                System.out.println("3 - Não");
+    
+                int opcao = scanner.nextInt();
+    
+                if (opcao == 1) {
+                    clientes.remove(clienteADeletar);
+                    System.out.println("Cliente deletado com sucesso.");
+                } else if (opcao == 2) {
+                    deletarClientePorNome();
+                } else {
+                    System.out.println("Operação cancelada. Voltando ao menu principal.");
+                }
+            } else if (escolha == 0) {
+                System.out.println("Operação cancelada. Voltando ao menu principal.");
+            } else {
+                System.out.println("Opção inválida. Voltando ao menu principal.");
+            }
+        }
     }
+     
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+    
 
     public void cadastrarProduto() {
             Scanner scanner = new Scanner(System.in);
@@ -220,7 +308,7 @@ public class SistemaDeCompras {
             System.out.println("\nCadastro de Produto:");
             System.out.print("Código do Produto: ");
             int codigo = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
             System.out.print("Nome: ");
             String nome = scanner.nextLine();
             System.out.print("Descrição: ");
@@ -243,8 +331,86 @@ public class SistemaDeCompras {
     }
 
     public void efetuarCompra() {
-        // Implemente a lógica para efetuar uma compra.
+        Scanner scanner = new Scanner(System.in);
+    
+        if (clientes.isEmpty() || produtos.isEmpty()) {
+            System.out.println("Não é possível efetuar uma compra sem clientes e produtos cadastrados.");
+            return;
+        }
+    
+        System.out.println("\nEfetuar Compra:");
+    
+        // Selecionar o cliente para a compra
+        System.out.print("Digite o CPF ou CNPJ do cliente: ");
+        String cpfOuCnpjCliente = scanner.next();
+        scanner.nextLine();
+    
+        Cliente clienteSelecionado = encontrarClientePorCpfOuCnpj(cpfOuCnpjCliente);
+    
+        if (clienteSelecionado == null) {
+            System.out.println("Cliente não encontrado. Voltando ao menu principal.");
+            return;
+        }
+    
+        Compra compra = criarCompra(clienteSelecionado);
+    
+        boolean continuarCompra = true;
+    
+        while (continuarCompra) {
+            System.out.println("Lista de Produtos Disponíveis:");
+    
+            for (int i = 0; i < produtos.size(); i++) {
+                Produto produto = produtos.get(i);
+                System.out.println(i + 1 + " - " + produto);
+            }
+    
+            System.out.print("Escolha o número do produto que deseja adicionar à compra (ou 0 para finalizar a compra): ");
+            int escolhaProduto = scanner.nextInt();
+    
+            if (escolhaProduto == 0) {
+                continuarCompra = false;
+            } else if (escolhaProduto > 0 && escolhaProduto <= produtos.size()) {
+                Produto produtoEscolhido = produtos.get(escolhaProduto - 1);
+    
+                System.out.print("Quantidade desejada: ");
+                int quantidade = scanner.nextInt();
+    
+                if (quantidade <= 0) {
+                    System.out.println("Quantidade inválida. Produto não adicionado à compra.");
+                } else {
+                    ItemCompra item = new ItemCompra(quantidade, produtoEscolhido.getNome(), produtoEscolhido.getPreco());
+                    compra.adicionarItem(item);
+                    System.out.println("Produto adicionado à compra.");
+                }
+            } else {
+                System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+    
+        System.out.println("Resumo da Compra:");
+        System.out.println(compra);
     }
+    
+    private Cliente encontrarClientePorCpfOuCnpj(String cpfOuCnpj) {
+        for (Cliente cliente : clientes) {
+            if (cliente instanceof ClientePF && ((ClientePF) cliente).getCpf().equals(cpfOuCnpj)) {
+                return cliente;
+            } else if (cliente instanceof ClientePJ && ((ClientePJ) cliente).getCnpj().equals(cpfOuCnpj)) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+    private Compra criarCompra(Cliente cliente) {
+        int novoIdentificador = compras.size() + 1;
+        Compra compra = new Compra(novoIdentificador, cliente instanceof ClientePF ? ((ClientePF) cliente).getCpf() : ((ClientePJ) cliente).getCnpj());
+        compras.add(compra);
+        return compra;
+    }
+    
+
+
+
 
     public void atualizarPagamentoCompra() {
         // Implemente a lógica para atualizar o pagamento de uma compra.
