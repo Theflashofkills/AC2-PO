@@ -1,5 +1,3 @@
-package AC2;
-
 class Produto {
     private int codigo;
     private String nome;
@@ -23,6 +21,14 @@ class Produto {
             return java.time.LocalDate.now().isAfter(dataValidade);
         }
         return false;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public double getPreco() {
+        return preco;
     }
 
     @Override
