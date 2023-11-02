@@ -1,5 +1,3 @@
-package AC2;
-
 class Endereco {
     private String rua;
     private int numero;
