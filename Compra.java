@@ -1,4 +1,5 @@
-package AC2;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Compra {
     private int identificador;
@@ -19,11 +20,15 @@ public class Compra {
 
     public void adicionarItem(ItemCompra item) {
         itens.add(item);
-        valorTotal += item.getValorTotal(); // Use o getter para obter o valor total do item
+        valorTotal += item.getValorTotal();
     }
 
     public double calcularValorRestante() {
         return valorTotal - totalPago;
+    }
+
+    public void atualizarTotalPago(double valorPago) {
+        totalPago += valorPago;
     }
 
     @Override
@@ -31,5 +36,4 @@ public class Compra {
         return "Identificador da Compra: " + identificador + "\nData: " + data + "\nValor Total: R$" + valorTotal + "\nCPF/CNPJ do Cliente: " + cpfOuCnpjCliente + "\nTotal Pago: R$" + totalPago;
     }
 }
-
 
