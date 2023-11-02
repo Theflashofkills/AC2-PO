@@ -1,5 +1,3 @@
-package AC2;
-
 class ClientePF extends Cliente {
     private String cpf;
     private int maxParcelas;
@@ -14,8 +12,12 @@ class ClientePF extends Cliente {
         return cpf;
     }
 
+
+
     @Override
     public String toString() {
         return super.toString() + "\nCPF: " + cpf + "\nMáximo de Parcelas: " + maxParcelas;
     }
+
+    
 }
