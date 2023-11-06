@@ -15,7 +15,7 @@ public class Compra {
         this.cpfOuCnpjCliente = cpfOuCnpjCliente;
         this.totalPago = 0;
         this.itens = new ArrayList<>();
-        this.valorTotal = 0; // Inicialize o valor total como zero
+        this.valorTotal = 0;
     }
 
     public void adicionarItem(ItemCompra item) {
@@ -31,9 +31,28 @@ public class Compra {
         totalPago += valorPago;
     }
 
+    public int getIdentificador() {
+        return identificador;
+    }
+
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
+    public double getTotalPago() {
+        return totalPago;
+    }
+
+    public String getCpfOuCnpjCliente() {
+        return cpfOuCnpjCliente;
+    }
+
+    public java.time.LocalDate getData() {
+        return data;
+    }
+
     @Override
     public String toString() {
         return "Identificador da Compra: " + identificador + "\nData: " + data + "\nValor Total: R$" + valorTotal + "\nCPF/CNPJ do Cliente: " + cpfOuCnpjCliente + "\nTotal Pago: R$" + totalPago;
     }
 }
-
