@@ -2,7 +2,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 public class SistemaDeCompras {
@@ -818,9 +817,7 @@ public class SistemaDeCompras {
         JOptionPane.showMessageDialog(null, mensagem.toString());
     }
 
-private void mostrarMensagem(String mensagem) {
-    JOptionPane.showMessageDialog(null, mensagem);
-}
+
 }
 
 
