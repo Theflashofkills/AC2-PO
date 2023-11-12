@@ -13,8 +13,12 @@ class Cliente {
     public String getNome() {
             return nome;
         }
+    
+    public String toSaveString() {
+            return nome + ";" + endereco + ";" + dataCadastro;
+        }
 
-
+    
     
 
     @Override
