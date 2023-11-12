@@ -3,6 +3,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 public class SistemaDeCompras {
     private List<Cliente> clientes;
@@ -21,22 +22,21 @@ public class SistemaDeCompras {
     }
 
     public void exibirMenu() {
-        Scanner scanner = new Scanner(System.in);
         int opcao;
 
         do {
-            System.out.println("\nMENU:");
-            System.out.println("1 - Cadastro de Clientes");
-            System.out.println("2 - Deletar Cliente pelo CPF ou CNPJ");
-            System.out.println("3 - Deletar Cliente pelo Nome");
-            System.out.println("4 - Cadastro de Produtos");
-            System.out.println("5 - Efetuar uma Compra");
-            System.out.println("6 - Atualizar Situação de Pagamento de uma Compra");
-            System.out.println("7 - Relatórios");
-            System.out.println("8 - Sair");
+            String menu = "MENU:\n" +
+                    "1 - Cadastro de Clientes\n" +
+                    "2 - Deletar Cliente pelo CPF ou CNPJ\n" +
+                    "3 - Deletar Cliente pelo Nome\n" +
+                    "4 - Cadastro de Produtos\n" +
+                    "5 - Efetuar uma Compra\n" +
+                    "6 - Atualizar Situação de Pagamento de uma Compra\n" +
+                    "7 - Relatórios\n" +
+                    "8 - Sair";
 
-            System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
+            String opcaoStr = JOptionPane.showInputDialog(null, menu + "\nEscolha uma opção:");
+            opcao = Integer.parseInt(opcaoStr);
 
             switch (opcao) {
                 case 1:
@@ -61,13 +61,15 @@ public class SistemaDeCompras {
                     exibirRelatorios();
                     break;
                 case 8:
-                    System.out.println("Saindo do sistema. Obrigado!");
+                    JOptionPane.showMessageDialog(null, "Saindo do sistema. Obrigado!");
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
             }
         } while (opcao != 8);
     }
+
+    
 
 
 
@@ -814,5 +816,10 @@ private void valorTotalComprasUltimos12Meses() {
         System.out.println("Histórico não encontrado.");
     }
 }
+
+private void mostrarMensagem(String mensagem) {
+    JOptionPane.showMessageDialog(null, mensagem);
 }
+}
+
 
