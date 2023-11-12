@@ -82,85 +82,84 @@ public class SistemaDeCompras {
 
 
     public void cadastrarCliente() {
-        Scanner scanner = new Scanner(System.in);
-    
         do {
             System.out.println("\nCadastro de Cliente:");
-            System.out.print("Nome: ");
-            String nome = scanner.nextLine();
-            System.out.print("Endereço - Rua: ");
-            String rua = scanner.nextLine();
-            System.out.print("Endereço - Número: ");
-            int numero = scanner.nextInt();
-            scanner.nextLine();
-            System.out.print("Endereço - Bairro: ");
-            String bairro = scanner.nextLine();
-            System.out.print("Endereço - CEP: ");
-            String cep = scanner.nextLine();
-            System.out.print("Endereço - Cidade: ");
-            String cidade = scanner.nextLine();
-            System.out.print("Endereço - Estado: ");
-            String estado = scanner.nextLine();
     
-            System.out.println("Escolha o tipo de cliente:");
-            System.out.println("1 - Pessoa Física (PF)");
-            System.out.println("2 - Pessoa Jurídica (PJ)");
-            System.out.print("Digite o número da opção: ");
-            int tipoCliente = scanner.nextInt();
+            String nome = JOptionPane.showInputDialog("Nome:");
+            String rua = JOptionPane.showInputDialog("Endereço - Rua:");
+            int numero = Integer.parseInt(JOptionPane.showInputDialog("Endereço - Número:"));
+            String bairro = JOptionPane.showInputDialog("Endereço - Bairro:");
+            String cep = JOptionPane.showInputDialog("Endereço - CEP:");
+            String cidade = JOptionPane.showInputDialog("Endereço - Cidade:");
+            String estado = JOptionPane.showInputDialog("Endereço - Estado:");
+    
+            String[] opcoesCliente = {"Pessoa Física (PF)", "Pessoa Jurídica (PJ)"};
+            int tipoCliente = JOptionPane.showOptionDialog(
+                    null,
+                    "Escolha o tipo de cliente:",
+                    "Tipo de Cliente",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opcoesCliente,
+                    opcoesCliente[0]
+            ) + 1;
     
             Cliente cliente = null;
     
             switch (tipoCliente) {
                 case 1: // Pessoa Física
-                    System.out.print("CPF: ");
-                    String cpf = scanner.next();
-                    System.out.print("Máximo de Parcelas: ");
-                    int maxParcelasPF = scanner.nextInt();
+                    String cpf = JOptionPane.showInputDialog("CPF:");
+                    int maxParcelasPF = Integer.parseInt(JOptionPane.showInputDialog("Máximo de Parcelas:"));
     
                     cliente = new ClientePF(nome, new Endereco(rua, numero, bairro, cep, cidade, estado), cpf, maxParcelasPF);
                     break;
                 case 2: // Pessoa Jurídica
-                    System.out.print("CNPJ: ");
-                    String cnpj = scanner.next();
-                    scanner.nextLine();
-                    System.out.print("Razão Social: ");
-                    String razaoSocial = scanner.nextLine();
-                    System.out.print("Prazo Máximo: ");
-                    int prazoMaximoPJ = scanner.nextInt();
+                    String cnpj = JOptionPane.showInputDialog("CNPJ:");
+                    String razaoSocial = JOptionPane.showInputDialog("Razão Social:");
+                    int prazoMaximoPJ = Integer.parseInt(JOptionPane.showInputDialog("Prazo Máximo:"));
     
                     cliente = new ClientePJ(nome, new Endereco(rua, numero, bairro, cep, cidade, estado), cnpj, razaoSocial, prazoMaximoPJ);
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
-                    break;
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+                    continue;
             }
     
             if (cliente != null) {
-                System.out.println("Dados do Cliente:");
-                System.out.println(cliente);
+                JOptionPane.showMessageDialog(null, "Dados do Cliente:\n" + cliente);
     
-                System.out.println("Deseja continuar?");
-                System.out.println("1 - Sim (Cadastrar Cliente e voltar ao menu principal)");
-                System.out.println("2 - Não, quero editar (Deletar o cliente atual e voltar ao início)");
-                System.out.println("3 - Não, Sair (Voltar ao menu principal)");
-                System.out.print("Escolha uma opção: ");
-                int opcao = scanner.nextInt();
+                String[] opcoesContinuar = {"Sim (Cadastrar Cliente e voltar ao menu principal)",
+                        "Não, quero editar (Deletar o cliente atual e voltar ao início)",
+                        "Não, Sair (Voltar ao menu principal)"};
+    
+                int opcao = JOptionPane.showOptionDialog(
+                        null,
+                        "Deseja continuar?",
+                        "Continuar",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        opcoesContinuar,
+                        opcoesContinuar[0]
+                ) + 1;
     
                 if (opcao == 1) {
                     clientes.add(cliente);
-                    System.out.println("Cliente cadastrado com sucesso!");
+                    JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
                     return; // Volta ao menu principal
                 } else if (opcao == 2) {
                     // Não faz nada para continuar o loop e permitir a edição
                 } else if (opcao == 3) {
                     return; // Volta ao menu principal
                 } else {
-                    System.out.println("Opção inválida. Retornando ao menu principal.");
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Retornando ao menu principal.");
                     return; // Volta ao menu principal
                 }
             }
         } while (true);
     }
+    
     
     
     
@@ -173,17 +172,12 @@ public class SistemaDeCompras {
 
 
     public void deletarClientePorCpfOuCnpj() {
-        Scanner scanner = new Scanner(System.in);
-    
         if (clientes.isEmpty()) {
-            System.out.println("Não há nenhum cliente em nossa base de dados.");
+            JOptionPane.showMessageDialog(null, "Não há nenhum cliente em nossa base de dados.");
             return;
         }
     
-        System.out.println("\nDeletar Cliente por CPF ou CNPJ:");
-        System.out.print("Digite o CPF ou CNPJ do cliente que deseja deletar: ");
-        String cpfOuCnpj = scanner.next();
-        scanner.nextLine();
+        String cpfOuCnpj = JOptionPane.showInputDialog("Deletar Cliente por CPF ou CNPJ:\nDigite o CPF ou CNPJ do cliente que deseja deletar:");
     
         Cliente clienteADeletar = null;
     
@@ -204,27 +198,31 @@ public class SistemaDeCompras {
         }
     
         if (clienteADeletar != null) {
-            System.out.println("Informações do Cliente a ser deletado:");
-            System.out.println(clienteADeletar);
+            JOptionPane.showMessageDialog(null, "Informações do Cliente a ser deletado:\n" + clienteADeletar);
     
-            System.out.println("Deseja mesmo deletar este cliente?");
-            System.out.println("1 - Sim");
-            System.out.println("2 - Não, quero deletar outro cliente");
-            System.out.println("3 - Não");
-    
-            int opcao = scanner.nextInt();
+            String[] opcoes = {"Sim", "Não, quero deletar outro cliente", "Não"};
+            int opcao = JOptionPane.showOptionDialog(
+                    null,
+                    "Deseja mesmo deletar este cliente?",
+                    "Confirmação",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opcoes,
+                    opcoes[0]
+            ) + 1;
     
             if (opcao == 1) {
                 clientes.remove(clienteADeletar);
-                System.out.println("Cliente deletado com sucesso.");
+                JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso.");
             } else if (opcao == 2) {
                 // Volta ao início da função para deletar outro cliente
                 deletarClientePorCpfOuCnpj();
             } else {
-                System.out.println("Operação cancelada. Voltando ao menu principal.");
+                JOptionPane.showMessageDialog(null, "Operação cancelada. Voltando ao menu principal.");
             }
         } else {
-            System.out.println("Cliente com CPF ou CNPJ não encontrado. Voltando ao menu principal.");
+            JOptionPane.showMessageDialog(null, "Cliente com CPF ou CNPJ não encontrado. Voltando ao menu principal.");
         }
     }
     
@@ -238,16 +236,12 @@ public class SistemaDeCompras {
 
     
     public void deletarClientePorNome() {
-        Scanner scanner = new Scanner(System.in);
-    
         if (clientes.isEmpty()) {
-            System.out.println("Não há nenhum cliente em nossa base de dados.");
+            JOptionPane.showMessageDialog(null, "Não há nenhum cliente em nossa base de dados.");
             return;
         }
     
-        System.out.println("\nDeletar Cliente por Nome:");
-        System.out.print("Digite o nome do cliente que deseja deletar: ");
-        String nomeCliente = scanner.nextLine();
+        String nomeCliente = JOptionPane.showInputDialog("Deletar Cliente por Nome:\nDigite o nome do cliente que deseja deletar:");
     
         List<Cliente> clientesEncontrados = new ArrayList<>();
     
@@ -259,58 +253,81 @@ public class SistemaDeCompras {
         }
     
         if (clientesEncontrados.isEmpty()) {
-            System.out.println("Cliente não encontrado.");
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
     
             int opcao;
             do {
-                System.out.println("Opções:");
-                System.out.println("1 - Voltar ao Menu");
-                System.out.println("2 - Inserir nome novamente");
-                System.out.print("Escolha uma opção: ");
-                opcao = scanner.nextInt();
-                scanner.nextLine();
+                String[] opcoes = {"Voltar ao Menu", "Inserir nome novamente"};
+                opcao = JOptionPane.showOptionDialog(
+                        null,
+                        "Opções:",
+                        "Opções",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        opcoes,
+                        opcoes[0]
+                ) + 1;
+    
                 if (opcao == 1) {
                     return;
                 } else if (opcao != 2) {
-                    System.out.println("Opção inválida. Tente novamente.");
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 }
             } while (opcao != 1 && opcao != 2);
         } else {
-            System.out.println("Clientes encontrados com o nome \"" + nomeCliente + "\":");
+            StringBuilder clientesEncontradosMessage = new StringBuilder("Clientes encontrados com o nome \"" + nomeCliente + "\":\n");
             for (int i = 0; i < clientesEncontrados.size(); i++) {
                 Cliente cliente = clientesEncontrados.get(i);
-                System.out.println(i + 1 + " - " + cliente);
+                clientesEncontradosMessage.append(i + 1).append(" - ").append(cliente).append("\n");
             }
     
-            System.out.print("Escolha o número do cliente que deseja deletar (ou 0 para cancelar): ");
-            int escolha = scanner.nextInt();
-            scanner.nextLine();
+            String[] opcoes = new String[clientesEncontrados.size() + 1];
+            for (int i = 0; i < clientesEncontrados.size(); i++) {
+                opcoes[i] = Integer.toString(i + 1);
+            }
+            opcoes[opcoes.length - 1] = "0";
     
-            if (escolha > 0 && escolha <= clientesEncontrados.size()) {
-                Cliente clienteADeletar = clientesEncontrados.get(escolha - 1);
+            int escolha = JOptionPane.showOptionDialog(
+                    null,
+                    clientesEncontradosMessage.toString() + "Escolha o número do cliente que deseja deletar (ou 0 para cancelar):",
+                    "Escolha do Cliente",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opcoes,
+                    opcoes[0]
+            );
     
-                System.out.println("Informações do Cliente a ser deletado:");
-                System.out.println(clienteADeletar);
+            if (escolha >= 0 && escolha < clientesEncontrados.size()) {
+                Cliente clienteADeletar = clientesEncontrados.get(escolha);
     
-                System.out.println("Deseja mesmo deletar este cliente?");
-                System.out.println("1 - Sim");
-                System.out.println("2 - Não, quero deletar outro cliente");
-                System.out.println("3 - Não");
+                JOptionPane.showMessageDialog(null, "Informações do Cliente a ser deletado:\n" + clienteADeletar);
     
-                int opcao = scanner.nextInt();
+                String[] opcoesConfirmacao = {"Sim", "Não, quero deletar outro cliente", "Não"};
+                int opcao = JOptionPane.showOptionDialog(
+                        null,
+                        "Deseja mesmo deletar este cliente?",
+                        "Confirmação",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        opcoesConfirmacao,
+                        opcoesConfirmacao[0]
+                ) + 1;
     
                 if (opcao == 1) {
                     clientes.remove(clienteADeletar);
-                    System.out.println("Cliente deletado com sucesso.");
+                    JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso.");
                 } else if (opcao == 2) {
                     deletarClientePorNome();
                 } else {
-                    System.out.println("Operação cancelada. Voltando ao menu principal.");
+                    JOptionPane.showMessageDialog(null, "Operação cancelada. Voltando ao menu principal.");
                 }
-            } else if (escolha == 0) {
-                System.out.println("Operação cancelada. Voltando ao menu principal.");
+            } else if (escolha == opcoes.length - 1) {
+                JOptionPane.showMessageDialog(null, "Operação cancelada. Voltando ao menu principal.");
             } else {
-                System.out.println("Opção inválida. Voltando ao menu principal.");
+                JOptionPane.showMessageDialog(null, "Opção inválida. Voltando ao menu principal.");
             }
         }
     }
@@ -329,31 +346,28 @@ public class SistemaDeCompras {
     
 
     public void cadastrarProduto() {
-            Scanner scanner = new Scanner(System.in);
-        
-            System.out.println("\nCadastro de Produto:");
-            System.out.print("Código do Produto: ");
-            int codigo = scanner.nextInt();
-            scanner.nextLine();
-            System.out.print("Nome: ");
-            String nome = scanner.nextLine();
-            System.out.print("Descrição: ");
-            String descricao = scanner.nextLine();
-            System.out.print("Preço: R$");
-            double preco = scanner.nextDouble();
-        
-            Produto produto = new Produto(codigo, nome, descricao, preco);
-        
-            produtos.add(produto);
-            System.out.println("Produto cadastrado com sucesso!");
-        
-            System.out.print("Deseja ver como ficou o produto cadastrado? (S/N): ");
-            String verProduto = scanner.next();
-            
-            if (verProduto.equalsIgnoreCase("S")) {
-                System.out.println("Produto Cadastrado:");
-                System.out.println(produto);
-            }
+        System.out.println("\nCadastro de Produto:");
+    
+        int codigo = Integer.parseInt(JOptionPane.showInputDialog("Código do Produto:"));
+        String nome = JOptionPane.showInputDialog("Nome:");
+        String descricao = JOptionPane.showInputDialog("Descrição:");
+        double preco = Double.parseDouble(JOptionPane.showInputDialog("Preço: R$"));
+    
+        Produto produto = new Produto(codigo, nome, descricao, preco);
+    
+        produtos.add(produto);
+        JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
+    
+        int opcao = JOptionPane.showConfirmDialog(
+                null,
+                "Deseja ver como ficou o produto cadastrado?",
+                "Visualizar Produto",
+                JOptionPane.YES_NO_OPTION
+        );
+    
+        if (opcao == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(null, "Produto Cadastrado:\n" + produto);
+        }
     }
 
 
@@ -365,26 +379,20 @@ public class SistemaDeCompras {
 
 
 
-
     public void efetuarCompra() {
-        Scanner scanner = new Scanner(System.in);
-    
         if (clientes.isEmpty() || produtos.isEmpty()) {
-            System.out.println("Não é possível efetuar uma compra sem clientes e produtos cadastrados.");
+            JOptionPane.showMessageDialog(null, "Não é possível efetuar uma compra sem clientes e produtos cadastrados.");
             return;
         }
     
-        System.out.println("\nEfetuar Compra:");
+        JOptionPane.showMessageDialog(null, "Efetuar Compra:");
     
         // Selecionar o cliente para a compra
-        System.out.print("Digite o CPF ou CNPJ do cliente: ");
-        String cpfOuCnpjCliente = scanner.next();
-        scanner.nextLine();
-    
+        String cpfOuCnpjCliente = JOptionPane.showInputDialog("Digite o CPF ou CNPJ do cliente:");
         Cliente clienteSelecionado = encontrarClientePorCpfOuCnpj(cpfOuCnpjCliente);
     
         if (clienteSelecionado == null) {
-            System.out.println("Cliente não encontrado. Voltando ao menu principal.");
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado. Voltando ao menu principal.");
             return;
         }
     
@@ -393,38 +401,37 @@ public class SistemaDeCompras {
         boolean continuarCompra = true;
     
         while (continuarCompra) {
-            System.out.println("Lista de Produtos Disponíveis:");
+            StringBuilder listaProdutos = new StringBuilder("Lista de Produtos Disponíveis:\n");
     
             for (int i = 0; i < produtos.size(); i++) {
                 Produto produto = produtos.get(i);
-                System.out.println(i + 1 + " - " + produto);
+                listaProdutos.append(i + 1).append(" - ").append(produto).append("\n");
             }
     
-            System.out.print("Escolha o número do produto que deseja adicionar à compra (ou 0 para finalizar a compra): ");
-            int escolhaProduto = scanner.nextInt();
+            String escolhaProdutoStr = JOptionPane.showInputDialog(listaProdutos + "Escolha o número do produto que deseja adicionar à compra (ou 0 para finalizar a compra):");
+            int escolhaProduto = Integer.parseInt(escolhaProdutoStr);
     
             if (escolhaProduto == 0) {
                 continuarCompra = false;
             } else if (escolhaProduto > 0 && escolhaProduto <= produtos.size()) {
                 Produto produtoEscolhido = produtos.get(escolhaProduto - 1);
     
-                System.out.print("Quantidade desejada: ");
-                int quantidade = scanner.nextInt();
+                String quantidadeStr = JOptionPane.showInputDialog("Quantidade desejada:");
+                int quantidade = Integer.parseInt(quantidadeStr);
     
                 if (quantidade <= 0) {
-                    System.out.println("Quantidade inválida. Produto não adicionado à compra.");
+                    JOptionPane.showMessageDialog(null, "Quantidade inválida. Produto não adicionado à compra.");
                 } else {
                     ItemCompra item = new ItemCompra(quantidade, produtoEscolhido.getNome(), produtoEscolhido.getPreco());
                     compra.adicionarItem(item);
-                    System.out.println("Produto adicionado à compra.");
+                    JOptionPane.showMessageDialog(null, "Produto adicionado à compra.");
                 }
             } else {
-                System.out.println("Opção inválida. Tente novamente.");
+                JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
             }
         }
     
-        System.out.println("Resumo da Compra:");
-        System.out.println(compra);
+        JOptionPane.showMessageDialog(null, "Resumo da Compra:\n" + compra);
     }
     
     private Cliente encontrarClientePorCpfOuCnpj(String cpfOuCnpj) {
@@ -437,6 +444,7 @@ public class SistemaDeCompras {
         }
         return null;
     }
+    
     private Compra criarCompra(Cliente cliente) {
         int novoIdentificador = compras.size() + 1;
         Compra compra = new Compra(novoIdentificador, cliente instanceof ClientePF ? ((ClientePF) cliente).getCpf() : ((ClientePJ) cliente).getCnpj());
@@ -458,21 +466,23 @@ public class SistemaDeCompras {
 
 
     public void atualizarPagamentoCompra() {
-        Scanner scanner = new Scanner(System.in);
+        JOptionPane.showMessageDialog(null, "Atualizar Pagamento de Compra:");
     
-        System.out.println("\nAtualizar Pagamento de Compra:");
-        System.out.println("Opções:");
-        System.out.println("1 - Procurar compra por CPF");
-        System.out.println("2 - Procurar por Identificador da Compra");
-        System.out.println("3 - Sair");
-        System.out.print("Escolha uma opção: ");
-        int opcao = scanner.nextInt();
-        scanner.nextLine();
+        Object[] opcoes = {"Procurar compra por CPF", "Procurar por Identificador da Compra", "Sair"};
+        int opcao = JOptionPane.showOptionDialog(
+                null,
+                "Escolha uma opção:",
+                "Opções",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opcoes,
+                opcoes[0]
+        ) + 1;
     
         switch (opcao) {
             case 1:
-                System.out.print("Digite o CPF do cliente: ");
-                String cpf = scanner.nextLine();
+                String cpf = JOptionPane.showInputDialog("Digite o CPF do cliente:");
     
                 List<Compra> comprasCliente = new ArrayList<>();
     
@@ -484,45 +494,42 @@ public class SistemaDeCompras {
                 }
     
                 if (comprasCliente.isEmpty()) {
-                    System.out.println("Nenhuma compra encontrada para este CPF.");
+                    JOptionPane.showMessageDialog(null, "Nenhuma compra encontrada para este CPF.");
                     break;
                 }
     
-                System.out.println("Compras do cliente com CPF " + cpf + ":");
+                StringBuilder comprasClienteMessage = new StringBuilder("Compras do cliente com CPF " + cpf + ":\n");
                 for (Compra compra : comprasCliente) {
-                    System.out.println(compra);
+                    comprasClienteMessage.append(compra).append("\n");
                 }
     
-                System.out.print("Escolha o número da compra que deseja atualizar (ou 0 para cancelar): ");
-                int escolhaCompra = scanner.nextInt();
-                scanner.nextLine();
+                String escolhaCompraStr = JOptionPane.showInputDialog(comprasClienteMessage + "Escolha o número da compra que deseja atualizar (ou 0 para cancelar):");
+                int escolhaCompra = Integer.parseInt(escolhaCompraStr);
     
                 if (escolhaCompra == 0 || escolhaCompra > comprasCliente.size()) {
-                    System.out.println("Operação cancelada. Voltando ao menu principal.");
+                    JOptionPane.showMessageDialog(null, "Operação cancelada. Voltando ao menu principal.");
                     break;
                 }
     
                 Compra compraEscolhida = comprasCliente.get(escolhaCompra - 1);
     
-                System.out.print("Digite o novo total pago pelo cliente: R$");
-                double novoTotalPago = scanner.nextDouble();
-                scanner.nextLine();
+                String novoTotalPagoStr = JOptionPane.showInputDialog("Digite o novo total pago pelo cliente: R$");
+                double novoTotalPago = Double.parseDouble(novoTotalPagoStr);
     
                 double totalRestante = compraEscolhida.calcularValorRestante();
-                
+    
                 if (novoTotalPago > totalRestante) {
-                    System.out.println("Novo total excederá o valor total da compra. Insira novamente.");
+                    JOptionPane.showMessageDialog(null, "Novo total excederá o valor total da compra. Insira novamente.");
                 } else {
                     compraEscolhida.atualizarTotalPago(novoTotalPago);
-                    System.out.println("Total pago atualizado com sucesso.");
+                    JOptionPane.showMessageDialog(null, "Total pago atualizado com sucesso.");
                 }
     
                 break;
     
             case 2:
-                System.out.print("Digite o Identificador da Compra: ");
-                int identificadorCompra = scanner.nextInt();
-                scanner.nextLine();
+                String identificadorCompraStr = JOptionPane.showInputDialog("Digite o Identificador da Compra:");
+                int identificadorCompra = Integer.parseInt(identificadorCompraStr);
     
                 Compra compraEncontrada = null;
     
@@ -534,34 +541,32 @@ public class SistemaDeCompras {
                 }
     
                 if (compraEncontrada == null) {
-                    System.out.println("Compra com Identificador " + identificadorCompra + " não encontrada.");
+                    JOptionPane.showMessageDialog(null, "Compra com Identificador " + identificadorCompra + " não encontrada.");
                     break;
                 }
     
-                System.out.println("Compra encontrada:");
-                System.out.println(compraEncontrada);
+                JOptionPane.showMessageDialog(null, "Compra encontrada:\n" + compraEncontrada);
     
-                System.out.print("Digite o novo total pago pelo cliente: R$");
-                novoTotalPago = scanner.nextDouble();
-                scanner.nextLine();
+                String novoTotalPagoStr2 = JOptionPane.showInputDialog("Digite o novo total pago pelo cliente: R$");
+                double novoTotalPago2 = Double.parseDouble(novoTotalPagoStr2);
     
                 double totalRestanteCompra = compraEncontrada.calcularValorRestante();
     
-                if (novoTotalPago > totalRestanteCompra) {
-                    System.out.println("Novo total excederá o valor total da compra. Insira novamente.");
+                if (novoTotalPago2 > totalRestanteCompra) {
+                    JOptionPane.showMessageDialog(null, "Novo total excederá o valor total da compra. Insira novamente.");
                 } else {
-                    compraEncontrada.atualizarTotalPago(novoTotalPago);
-                    System.out.println("Total pago atualizado com sucesso.");
+                    compraEncontrada.atualizarTotalPago(novoTotalPago2);
+                    JOptionPane.showMessageDialog(null, "Total pago atualizado com sucesso.");
                 }
     
                 break;
     
             case 3:
-                System.out.println("Operação cancelada. Voltando ao menu principal.");
+                JOptionPane.showMessageDialog(null, "Operação cancelada. Voltando ao menu principal.");
                 break;
     
             default:
-                System.out.println("Opção inválida. Tente novamente.");
+                JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 break;
         }
     }
@@ -575,247 +580,243 @@ public class SistemaDeCompras {
 
 
     public void exibirRelatorios() {
-    Scanner scanner = new Scanner(System.in);
-
-    int opcao;
-
-    do {
-        System.out.println("\nRelatórios:");
-        System.out.println("1 - Relação de Clientes por Nome");
-        System.out.println("2 - Relação de Todos os Produtos");
-        System.out.println("3 - Busca de Produto pelo Nome");
-        System.out.println("4 - Relação de Todas as Compras");
-        System.out.println("5 - Busca de Compra por Número");
-        System.out.println("6 - Compras Não Pagas");
-        System.out.println("7 - Últimas 10 Compras Pagas");
-        System.out.println("8 - Compra Mais Cara");
-        System.out.println("9 - Compra Mais Barata");
-        System.out.println("10 - Valor Total de Compras nos Últimos 12 Meses");
-        System.out.println("11 - Voltar ao Menu Principal");
-
-        System.out.print("Escolha uma opção: ");
-        opcao = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (opcao) {
-            case 1:
-                System.out.print("Digite a sequência de caracteres iniciais do nome: ");
-                String sequencia = scanner.nextLine();
-                relacaoClientesPorNome(sequencia);
-                break;
-            case 2:
-                relacaoTodosProdutos();
-                break;
-            case 3:
-                System.out.print("Digite o nome do produto: ");
-                String nomeProduto = scanner.nextLine();
-                buscaProdutoPeloNome(nomeProduto);
-                break;
-            case 4:
-                relacaoTodasCompras();
-                break;
-            case 5:
-                System.out.print("Digite o número da compra: ");
-                int numeroCompra = scanner.nextInt();
-                buscaCompraPeloNumero(numeroCompra);
-                break;
-            case 6:
-                comprasNaoPagas();
-                break;
-            case 7:
-                ultimas10ComprasPagas();
-                break;
-            case 8:
-                compraMaisCara();
-                break;
-            case 9:
-                compraMaisBarata();
-                break;
-            case 10:
-                valorTotalComprasUltimos12Meses();
-                break;
-            case 11:
-                return;
-            default:
-                System.out.println("Opção inválida. Tente novamente.");
-        }
-    } while (opcao != 11);
-}
-
-private void relacaoClientesPorNome(String sequencia) {
-    List<Cliente> clientesEncontrados = new ArrayList<>();
-
-    for (Cliente cliente : clientes) {
-        if (cliente.getNome().toLowerCase().startsWith(sequencia.toLowerCase())) {
-            clientesEncontrados.add(cliente);
-        }
+        int opcao;
+    
+        do {
+            String opcoes = "Relatórios:\n" +
+                    "1 - Relação de Clientes por Nome\n" +
+                    "2 - Relação de Todos os Produtos\n" +
+                    "3 - Busca de Produto pelo Nome\n" +
+                    "4 - Relação de Todas as Compras\n" +
+                    "5 - Busca de Compra por Número\n" +
+                    "6 - Compras Não Pagas\n" +
+                    "7 - Últimas 10 Compras Pagas\n" +
+                    "8 - Compra Mais Cara\n" +
+                    "9 - Compra Mais Barata\n" +
+                    "10 - Valor Total de Compras nos Últimos 12 Meses\n" +
+                    "11 - Voltar ao Menu Principal";
+    
+            opcao = Integer.parseInt(JOptionPane.showInputDialog(opcoes));
+    
+            switch (opcao) {
+                case 1:
+                    String sequencia = JOptionPane.showInputDialog("Digite a sequência de caracteres iniciais do nome:");
+                    relacaoClientesPorNome(sequencia);
+                    break;
+                case 2:
+                    relacaoTodosProdutos();
+                    break;
+                case 3:
+                    String nomeProduto = JOptionPane.showInputDialog("Digite o nome do produto:");
+                    buscaProdutoPeloNome(nomeProduto);
+                    break;
+                case 4:
+                    relacaoTodasCompras();
+                    break;
+                case 5:
+                    int numeroCompra = Integer.parseInt(JOptionPane.showInputDialog("Digite o número da compra:"));
+                    buscaCompraPeloNumero(numeroCompra);
+                    break;
+                case 6:
+                    comprasNaoPagas();
+                    break;
+                case 7:
+                    ultimas10ComprasPagas();
+                    break;
+                case 8:
+                    compraMaisCara();
+                    break;
+                case 9:
+                    compraMaisBarata();
+                    break;
+                case 10:
+                    valorTotalComprasUltimos12Meses();
+                    break;
+                case 11:
+                    return;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+            }
+        } while (opcao != 11);
     }
 
-    if (clientesEncontrados.isEmpty()) {
-        System.out.println("Histórico não encontrado.");
-    } else {
-        System.out.println("Clientes com nome iniciado por \"" + sequencia + "\":");
-        for (Cliente cliente : clientesEncontrados) {
-            System.out.println(cliente);
+    private void relacaoClientesPorNome(String sequencia) {
+        List<Cliente> clientesEncontrados = new ArrayList<>();
+    
+        for (Cliente cliente : clientes) {
+            if (cliente.getNome().toLowerCase().startsWith(sequencia.toLowerCase())) {
+                clientesEncontrados.add(cliente);
+            }
+        }
+    
+        if (clientesEncontrados.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
+        } else {
+            StringBuilder mensagem = new StringBuilder("Clientes com nome iniciado por \"" + sequencia + "\":\n");
+            for (Cliente cliente : clientesEncontrados) {
+                mensagem.append(cliente).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, mensagem.toString());
         }
     }
-}
-
-private void relacaoTodosProdutos() {
-    if (produtos.isEmpty()) {
-        System.out.println("Histórico não encontrado.");
-    } else {
-        System.out.println("Todos os Produtos:");
+    
+    private void relacaoTodosProdutos() {
+        if (produtos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
+        } else {
+            StringBuilder mensagem = new StringBuilder("Todos os Produtos:\n");
+            for (Produto produto : produtos) {
+                mensagem.append(produto).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, mensagem.toString());
+        }
+    }
+    
+    private void buscaProdutoPeloNome(String nomeProduto) {
+        boolean encontrado = false;
+    
         for (Produto produto : produtos) {
-            System.out.println(produto);
+            if (produto.getNome().equalsIgnoreCase(nomeProduto)) {
+                encontrado = true;
+                JOptionPane.showMessageDialog(null, "Produto Encontrado:\n" + produto);
+                break;
+            }
+        }
+    
+        if (!encontrado) {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
         }
     }
-}
-
-private void buscaProdutoPeloNome(String nomeProduto) {
-    boolean encontrado = false;
-
-    for (Produto produto : produtos) {
-        if (produto.getNome().equalsIgnoreCase(nomeProduto)) {
-            encontrado = true;
-            System.out.println("Produto Encontrado:");
-            System.out.println(produto);
-            break;
+    
+    private void relacaoTodasCompras() {
+        if (compras.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
+        } else {
+            StringBuilder mensagem = new StringBuilder("Todas as Compras:\n");
+            for (Compra compra : compras) {
+                mensagem.append(compra).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, mensagem.toString());
         }
     }
-
-    if (!encontrado) {
-        System.out.println("Histórico não encontrado.");
-    }
-}
-
-private void relacaoTodasCompras() {
-    if (compras.isEmpty()) {
-        System.out.println("Histórico não encontrado.");
-    } else {
-        System.out.println("Todas as Compras:");
+    
+    private void buscaCompraPeloNumero(int numeroCompra) {
+        boolean encontrado = false;
+    
         for (Compra compra : compras) {
-            System.out.println(compra);
+            if (compra.getIdentificador() == numeroCompra) {
+                encontrado = true;
+                JOptionPane.showMessageDialog(null, "Compra Encontrada:\n" + compra);
+                break;
+            }
+        }
+    
+        if (!encontrado) {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
         }
     }
-}
-
-private void buscaCompraPeloNumero(int numeroCompra) {
-    boolean encontrado = false;
-
-    for (Compra compra : compras) {
-        if (compra.getIdentificador() == numeroCompra) {
-            encontrado = true;
-            System.out.println("Compra Encontrada:");
-            System.out.println(compra);
-            break;
+    
+    private void comprasNaoPagas() {
+        boolean encontradas = false;
+    
+        for (Compra compra : compras) {
+            if (compra.calcularValorRestante() > 0) {
+                encontradas = true;
+                JOptionPane.showMessageDialog(null, "Compra Não Paga:\n" + compra);
+            }
+        }
+    
+        if (!encontradas) {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
         }
     }
-
-    if (!encontrado) {
-        System.out.println("Histórico não encontrado.");
-    }
-}
-
-private void comprasNaoPagas() {
-    boolean encontradas = false;
-
-    for (Compra compra : compras) {
-        if (compra.calcularValorRestante() > 0) {
-            encontradas = true;
-            System.out.println("Compra Não Paga:");
-            System.out.println(compra);
+    
+    private void ultimas10ComprasPagas() {
+        List<Compra> ultimasComprasPagas = new ArrayList<>();
+    
+        for (int i = compras.size() - 1; i >= 0; i--) {
+            Compra compra = compras.get(i);
+            if (compra.getTotalPago() == compra.getValorTotal()) {
+                ultimasComprasPagas.add(compra);
+            }
+            if (ultimasComprasPagas.size() == 10) {
+                break;
+            }
+        }
+    
+        if (ultimasComprasPagas.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
+        } else {
+            StringBuilder mensagem = new StringBuilder("Últimas 10 Compras Pagas:\n");
+            for (Compra compra : ultimasComprasPagas) {
+                mensagem.append(compra).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, mensagem.toString());
         }
     }
-
-    if (!encontradas) {
-        System.out.println("Histórico não encontrado.");
-    }
-}
-
-private void ultimas10ComprasPagas() {
-    List<Compra> ultimasComprasPagas = new ArrayList<>();
-
-    for (int i = compras.size() - 1; i >= 0; i--) {
-        Compra compra = compras.get(i);
-        if (compra.getTotalPago() == compra.getValorTotal()) {
-            ultimasComprasPagas.add(compra);
+    
+    private void compraMaisCara() {
+        Compra compraMaisCara = null;
+        double maiorValor = 0;
+    
+        for (Compra compra : compras) {
+            if (compra.getValorTotal() > maiorValor) {
+                maiorValor = compra.getValorTotal();
+                compraMaisCara = compra;
+            }
         }
-        if (ultimasComprasPagas.size() == 10) {
-            break;
-        }
-    }
-
-    if (ultimasComprasPagas.isEmpty()) {
-        System.out.println("Histórico não encontrado.");
-    } else {
-        System.out.println("Últimas 10 Compras Pagas:");
-        for (Compra compra : ultimasComprasPagas) {
-            System.out.println(compra);
+    
+        if (compraMaisCara != null) {
+            JOptionPane.showMessageDialog(null, "Compra Mais Cara:\n" + compraMaisCara);
+        } else {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
         }
     }
-}
-
-private void compraMaisCara() {
-    Compra compraMaisCara = null;
-    double maiorValor = 0;
-
-    for (Compra compra : compras) {
-        if (compra.getValorTotal() > maiorValor) {
-            maiorValor = compra.getValorTotal();
-            compraMaisCara = compra;
+    
+    private void compraMaisBarata() {
+        Compra compraMaisBarata = null;
+        double menorValor = Double.MAX_VALUE;
+    
+        for (Compra compra : compras) {
+            if (compra.getValorTotal() < menorValor) {
+                menorValor = compra.getValorTotal();
+                compraMaisBarata = compra;
+            }
+        }
+    
+        if (compraMaisBarata != null) {
+            JOptionPane.showMessageDialog(null, "Compra Mais Barata:\n" + compraMaisBarata);
+        } else {
+            JOptionPane.showMessageDialog(null, "Histórico não encontrado.");
         }
     }
-
-    if (compraMaisCara != null) {
-        System.out.println("Compra Mais Cara:");
-        System.out.println(compraMaisCara);
-    } else {
-        System.out.println("Histórico não encontrado.");
-    }
-}
-
-private void compraMaisBarata() {
-    Compra compraMaisBarata = null;
-    double menorValor = Double.MAX_VALUE;
-
-    for (Compra compra : compras) {
-        if (compra.getValorTotal() < menorValor) {
-            menorValor = compra.getValorTotal();
-            compraMaisBarata = compra;
+    
+    private void valorTotalComprasUltimos12Meses() {
+        LocalDate dataAtual = LocalDate.now();
+        double[] totalComprasPorMes = new double[12];
+    
+        for (Compra compra : compras) {
+            LocalDate dataCompra = compra.getData();
+            Period periodo = Period.between(dataCompra, dataAtual);
+            int mesesAtras = periodo.getYears() * 12 + periodo.getMonths();
+    
+            if (mesesAtras < 12) {
+                totalComprasPorMes[11 - mesesAtras] += compra.getValorTotal();
+            }
         }
-    }
-
-    if (compraMaisBarata != null) {
-        System.out.println("Compra Mais Barata:");
-        System.out.println(compraMaisBarata);
-    } else {
-        System.out.println("Histórico não encontrado.");
-    }
-}
-
-private void valorTotalComprasUltimos12Meses() {
-    LocalDate dataAtual = LocalDate.now();
-    double[] totalComprasPorMes = new double[12];
-
-    for (Compra compra : compras) {
-        LocalDate dataCompra = compra.getData();
-        Period periodo = Period.between(dataCompra, dataAtual);
-        int mesesAtras = periodo.getYears() * 12 + periodo.getMonths();
-
-        if (mesesAtras < 12) {
-            totalComprasPorMes[11 - mesesAtras] += compra.getValorTotal();
+    
+        StringBuilder mensagem = new StringBuilder();
+    
+        for (int i = 0; i < totalComprasPorMes.length; i++) {
+            mensagem.append("Mês ").append(i + 1).append(": R$").append(totalComprasPorMes[i]).append("\n");
         }
+    
+        if (compras.isEmpty()) {
+            mensagem.append("Histórico não encontrado.");
+        }
+    
+        JOptionPane.showMessageDialog(null, mensagem.toString());
     }
-
-    for (int i = 0; i < totalComprasPorMes.length; i++) {
-        System.out.println("Mês " + (i + 1) + ": R$" + totalComprasPorMes[i]);
-    }
-
-    if (compras.isEmpty()) {
-        System.out.println("Histórico não encontrado.");
-    }
-}
 
 private void mostrarMensagem(String mensagem) {
     JOptionPane.showMessageDialog(null, mensagem);
