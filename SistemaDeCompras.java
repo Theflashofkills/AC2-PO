@@ -3,6 +3,10 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class SistemaDeCompras {
     private List<Cliente> clientes;
@@ -83,7 +87,7 @@ public class SistemaDeCompras {
     public void cadastrarCliente() {
         do {
             System.out.println("\nCadastro de Cliente:");
-    
+
             String nome = JOptionPane.showInputDialog("Nome:");
             String rua = JOptionPane.showInputDialog("Endereço - Rua:");
             int numero = Integer.parseInt(JOptionPane.showInputDialog("Endereço - Número:"));
@@ -91,7 +95,7 @@ public class SistemaDeCompras {
             String cep = JOptionPane.showInputDialog("Endereço - CEP:");
             String cidade = JOptionPane.showInputDialog("Endereço - Cidade:");
             String estado = JOptionPane.showInputDialog("Endereço - Estado:");
-    
+
             String[] opcoesCliente = {"Pessoa Física (PF)", "Pessoa Jurídica (PJ)"};
             int tipoCliente = JOptionPane.showOptionDialog(
                     null,
@@ -103,35 +107,35 @@ public class SistemaDeCompras {
                     opcoesCliente,
                     opcoesCliente[0]
             ) + 1;
-    
+
             Cliente cliente = null;
-    
+
             switch (tipoCliente) {
                 case 1: // Pessoa Física
                     String cpf = JOptionPane.showInputDialog("CPF:");
                     int maxParcelasPF = Integer.parseInt(JOptionPane.showInputDialog("Máximo de Parcelas:"));
-    
+
                     cliente = new ClientePF(nome, new Endereco(rua, numero, bairro, cep, cidade, estado), cpf, maxParcelasPF);
                     break;
                 case 2: // Pessoa Jurídica
                     String cnpj = JOptionPane.showInputDialog("CNPJ:");
                     String razaoSocial = JOptionPane.showInputDialog("Razão Social:");
                     int prazoMaximoPJ = Integer.parseInt(JOptionPane.showInputDialog("Prazo Máximo:"));
-    
+
                     cliente = new ClientePJ(nome, new Endereco(rua, numero, bairro, cep, cidade, estado), cnpj, razaoSocial, prazoMaximoPJ);
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                     continue;
             }
-    
+
             if (cliente != null) {
                 JOptionPane.showMessageDialog(null, "Dados do Cliente:\n" + cliente);
-    
+
                 String[] opcoesContinuar = {"Sim (Cadastrar Cliente e voltar ao menu principal)",
                         "Não, quero editar (Deletar o cliente atual e voltar ao início)",
                         "Não, Sair (Voltar ao menu principal)"};
-    
+
                 int opcao = JOptionPane.showOptionDialog(
                         null,
                         "Deseja continuar?",
@@ -142,10 +146,17 @@ public class SistemaDeCompras {
                         opcoesContinuar,
                         opcoesContinuar[0]
                 ) + 1;
-    
+
                 if (opcao == 1) {
                     clientes.add(cliente);
                     JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
+
+                    try {
+                        salvarClientesEmArquivo(cliente);
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(null, "Erro ao salvar cliente no arquivo: " + e.getMessage());
+                    }
+
                     return; // Volta ao menu principal
                 } else if (opcao == 2) {
                     // Não faz nada para continuar o loop e permitir a edição
@@ -158,7 +169,16 @@ public class SistemaDeCompras {
             }
         } while (true);
     }
-    
+
+    private void salvarClientesEmArquivo(Cliente cliente) throws IOException {
+        File arquivo = new File("clientes.txt");
+
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(arquivo, true))) {
+            escritor.write(cliente.toSaveString()); // toSaveString é um método que você deve adicionar à sua classe Cliente
+            escritor.newLine();
+        }
+    }
+
     
     
     
