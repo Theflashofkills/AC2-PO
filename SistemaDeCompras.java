@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -7,14 +6,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Period;
 
-public class SistemaDeCompras {
+class SistemaDeCompras {
     private List<Cliente> clientes;
     private List<Produto> produtos;
     private List<Compra> compras;
 
     public SistemaDeCompras() {
-        clientes = new ArrayList<>();
+        this.clientes = new ArrayList<>();
         produtos = new ArrayList<>();
         compras = new ArrayList<>();
     }
@@ -71,18 +71,6 @@ public class SistemaDeCompras {
             }
         } while (opcao != 8);
     }
-
-    
-
-
-
-
-
-
-
-
-
-
 
     public void cadastrarCliente() {
         do {
@@ -152,7 +140,7 @@ public class SistemaDeCompras {
                     JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
 
                     try {
-                        salvarClientesEmArquivo(cliente);
+                        salvarClientesNoArquivo();
                     } catch (IOException e) {
                         JOptionPane.showMessageDialog(null, "Erro ao salvar cliente no arquivo: " + e.getMessage());
                     }
@@ -170,36 +158,27 @@ public class SistemaDeCompras {
         } while (true);
     }
 
-    private void salvarClientesEmArquivo(Cliente cliente) throws IOException {
-        File arquivo = new File("clientes.txt");
+    private void salvarClientesNoArquivo() throws IOException {
+        File arquivo = new File("baseDados/clientes.txt");
 
-        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(arquivo, true))) {
-            escritor.write(cliente.toSaveString()); // toSaveString é um método que você deve adicionar à sua classe Cliente
-            escritor.newLine();
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(arquivo))) {
+            for (Cliente cliente : clientes) {
+                escritor.write(cliente.toSaveString());
+                escritor.newLine();
+            }
         }
     }
-
-    
-    
-    
-
-
-
-
-
-
-
 
     public void deletarClientePorCpfOuCnpj() {
         if (clientes.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Não há nenhum cliente em nossa base de dados.");
             return;
         }
-    
+
         String cpfOuCnpj = JOptionPane.showInputDialog("Deletar Cliente por CPF ou CNPJ:\nDigite o CPF ou CNPJ do cliente que deseja deletar:");
-    
+
         Cliente clienteADeletar = null;
-    
+
         for (Cliente cliente : clientes) {
             if (cliente instanceof ClientePF) {
                 ClientePF clientePF = (ClientePF) cliente;
@@ -215,10 +194,10 @@ public class SistemaDeCompras {
                 }
             }
         }
-    
+
         if (clienteADeletar != null) {
             JOptionPane.showMessageDialog(null, "Informações do Cliente a ser deletado:\n" + clienteADeletar);
-    
+
             String[] opcoes = {"Sim", "Não, quero deletar outro cliente", "Não"};
             int opcao = JOptionPane.showOptionDialog(
                     null,
@@ -230,9 +209,14 @@ public class SistemaDeCompras {
                     opcoes,
                     opcoes[0]
             ) + 1;
-    
+
             if (opcao == 1) {
                 clientes.remove(clienteADeletar);
+                try {
+                    salvarClientesNoArquivo(); // Atualiza o arquivo após a remoção do cliente
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Erro ao salvar clientes no arquivo: " + e.getMessage());
+                }
                 JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso.");
             } else if (opcao == 2) {
                 // Volta ao início da função para deletar outro cliente
@@ -244,36 +228,27 @@ public class SistemaDeCompras {
             JOptionPane.showMessageDialog(null, "Cliente com CPF ou CNPJ não encontrado. Voltando ao menu principal.");
         }
     }
-    
 
-   
-    
-
-
-
-
-
-    
     public void deletarClientePorNome() {
         if (clientes.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Não há nenhum cliente em nossa base de dados.");
             return;
         }
-    
+
         String nomeCliente = JOptionPane.showInputDialog("Deletar Cliente por Nome:\nDigite o nome do cliente que deseja deletar:");
-    
+
         List<Cliente> clientesEncontrados = new ArrayList<>();
-    
+
         // Procurar por clientes com o mesmo nome
         for (Cliente cliente : clientes) {
             if (cliente.getNome().equalsIgnoreCase(nomeCliente)) {
                 clientesEncontrados.add(cliente);
             }
         }
-    
+
         if (clientesEncontrados.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
-    
+
             int opcao;
             do {
                 String[] opcoes = {"Voltar ao Menu", "Inserir nome novamente"};
@@ -287,7 +262,7 @@ public class SistemaDeCompras {
                         opcoes,
                         opcoes[0]
                 ) + 1;
-    
+
                 if (opcao == 1) {
                     return;
                 } else if (opcao != 2) {
@@ -300,13 +275,13 @@ public class SistemaDeCompras {
                 Cliente cliente = clientesEncontrados.get(i);
                 clientesEncontradosMessage.append(i + 1).append(" - ").append(cliente).append("\n");
             }
-    
+
             String[] opcoes = new String[clientesEncontrados.size() + 1];
             for (int i = 0; i < clientesEncontrados.size(); i++) {
                 opcoes[i] = Integer.toString(i + 1);
             }
             opcoes[opcoes.length - 1] = "0";
-    
+
             int escolha = JOptionPane.showOptionDialog(
                     null,
                     clientesEncontradosMessage.toString() + "Escolha o número do cliente que deseja deletar (ou 0 para cancelar):",
@@ -317,12 +292,12 @@ public class SistemaDeCompras {
                     opcoes,
                     opcoes[0]
             );
-    
+
             if (escolha >= 0 && escolha < clientesEncontrados.size()) {
                 Cliente clienteADeletar = clientesEncontrados.get(escolha);
-    
+
                 JOptionPane.showMessageDialog(null, "Informações do Cliente a ser deletado:\n" + clienteADeletar);
-    
+
                 String[] opcoesConfirmacao = {"Sim", "Não, quero deletar outro cliente", "Não"};
                 int opcao = JOptionPane.showOptionDialog(
                         null,
@@ -334,9 +309,14 @@ public class SistemaDeCompras {
                         opcoesConfirmacao,
                         opcoesConfirmacao[0]
                 ) + 1;
-    
+
                 if (opcao == 1) {
                     clientes.remove(clienteADeletar);
+                    try {
+                        salvarClientesNoArquivo(); // Atualiza o arquivo após a remoção do cliente
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(null, "Erro ao salvar clientes no arquivo: " + e.getMessage());
+                    }
                     JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso.");
                 } else if (opcao == 2) {
                     deletarClientePorNome();
